@@ -13,4 +13,5 @@ int main(){
 
     eller.MakeMaze();
 
+    maze.PrintMaze();
 }

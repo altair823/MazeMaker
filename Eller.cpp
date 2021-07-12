@@ -12,14 +12,14 @@ void Eller::printCurrentLocationSet() {
     std::cout<<std::endl;
 }
 
-Eller::Eller(const Maze &maze) {
-    tempMaze = maze;
+Eller::Eller(Maze &maze) {
+    tempMaze = &maze;
 }
 
 void Eller::MakeMaze() {
     // Set maze number for logging.
-    tempMaze.IncreaseMazeNumber();
-    tempMaze.InitializeMaze();
+    tempMaze->IncreaseMazeNumber();
+    tempMaze->InitializeMaze();
 
     // Initial inserting. All cells in first row are inserted in different sets.
     for (int i = 0; i < MAX_ROW; ++i) {
@@ -150,27 +150,35 @@ void Eller::MergeWithRight(int row, int column) {
     }
     // Groups two cells into the same set.
     if (locationSet[row] == 0 && locationSet[row + 1] != 0){
-        locationSet[row] = locationSet[row + 1];
+        UpdateSet(locationSet[row], locationSet[row + 1]);
     } else{
-        locationSet[row + 1] = locationSet[row];
+        UpdateSet(locationSet[row + 1], locationSet[row]);
     }
 
     // Open right side wall at the current cell.
     // This is accompanied by opening the left wall in the right cell.
-    tempMaze.OpenWall(row, column, RIGHT);
+    tempMaze->OpenWall(row, column, RIGHT);
 }
 
 void Eller::MergeWithDown(int row, int column) {
     if (column + 1 >= MAX_COLUMN){
         return;
     }
-    tempMaze.OpenWall(row, column, DOWN);
+    tempMaze->OpenWall(row, column, DOWN);
 }
 
 void Eller::MergeWithDifferentSet(int column) {
     for (int row = 0; row < MAX_ROW - 1; ++row) {
         if (locationSet[row] != locationSet[row + 1]){
             MergeWithRight(row, column);
+        }
+    }
+}
+
+void Eller::UpdateSet(int targetSet, int destSet) {
+    for (int row = 0; row < MAX_ROW; row++){
+        if (locationSet[row] == targetSet){
+            locationSet[row] = destSet;
         }
     }
 }
