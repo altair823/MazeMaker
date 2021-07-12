@@ -175,10 +175,12 @@ void Eller::MergeWithDifferentSet(int column) {
     }
 }
 
-void Eller::UpdateSet(int targetSet, int destSet) {
-    for (int row = 0; row < MAX_ROW; row++){
-        if (locationSet[row] == targetSet){
-            locationSet[row] = destSet;
+void Eller::UpdateSet(int targetSetRow, int destSetRow) {
+    int targetSetValue = locationSet[targetSetRow];
+    int destSetValue = locationSet[destSetRow];
+    for (int row = targetSetRow-1; row < MAX_ROW; row++){
+        if (locationSet[row] == targetSetValue){
+            locationSet[row] = destSetValue;
         }
     }
 }
